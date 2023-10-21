@@ -7,12 +7,12 @@ from colorama import Fore, Back, Style
 load_dotenv()
 
 # configure OpenAI
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = os.getenv("API_SECRET_KEY")
 
 INSTRUCTIONS = """<<PUT THE PROMPT HERE>>"""
 
-TEMPERATURE = 0.5
-MAX_TOKENS = 500
+TEMPERATURE = 0.7
+MAX_TOKENS = 370
 FREQUENCY_PENALTY = 0
 PRESENCE_PENALTY = 0.6
 # limits how many questions we include in the prompt
@@ -88,11 +88,13 @@ def main():
     os.system("cls" if os.name == "nt" else "clear")
     # keep track of previous questions and answers
     previous_questions_and_answers = []
+    print(Fore.GREEN + Style.BRIGHT + "Hello! What can I get you?: " + Style.RESET_ALL)
     while True:
         # ask the user for their question
         new_question = input(
-            Fore.GREEN + Style.BRIGHT + "What can I get you?: " + Style.RESET_ALL
+            Fore.GREEN + Style.BRIGHT + "You: " + Style.RESET_ALL
         )
+        new_question = f"In ten lines or less, answer: {new_question}"
         # check the question is safe
         errors = get_moderation(new_question)
         if errors:
@@ -111,8 +113,11 @@ def main():
         previous_questions_and_answers.append((new_question, response))
 
         # print the response
-        print(Fore.CYAN + Style.BRIGHT + "Here you go: " + Style.NORMAL + response)
+        print(Fore.CYAN + Style.BRIGHT + "Response: " + Style.NORMAL + response)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(f"Error!: {e}")
